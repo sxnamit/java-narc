@@ -1,10 +1,10 @@
-package com.sxnamit.jfr.example;
+package com.sxnamit.jfr.demo;
 
 import java.util.Random;
 
 import com.sxnamit.jfr.event.TransactionCommitEvent;
 
-public class TransactionCommit implements Runnable {
+public class TransactionCommitDemo implements Runnable {
 
     private static final Random random = new Random();
 
@@ -16,7 +16,7 @@ public class TransactionCommit implements Runnable {
     }
 
     public static void main(String[] args) {
-        Runnable r = new TransactionCommit();
+        Runnable r = new TransactionCommitDemo();
         for (int i = 0; i < 10; i++) {
             new Thread(r).start();
         }
