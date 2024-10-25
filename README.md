@@ -1,8 +1,10 @@
 # A how-to on Java Flight Recorder  
   
-##Overview
-Java Flight Recorder (JFR) is a continuous monitoring tool built into the Java runtime (JVM), that collects diagnostic and profiling data from a running Java application.  
-
+Something tragic happens in the world of aeronautics, #FlightRecorder trends on Twitter until the device is recovered. A Flight Recorder, commonly referred to as a "black box," is an electronic device installed in aircrafts to record crucial flight data and cockpit conversations. The data it captures is essential for investigating accidents, helping to understand what happened during the flight and how to improve aviation safety.  
+  
+Like its aeronautic namesake, Java Flight Recorder also operates as a "black box," continuously collecting diagnostic and profiling data from a running Java application. This data can then be analysed using JFR tool or APIs or JMC, when an anomaly is detected. Formally speaking, Java Flight Recorder (JFR) is a diagnostic and continuous monitoring tool built into the Java Runtime, designed to collect detailed data about a running Java application with minimal impact on performance.  
+  
+## Overview
 -Open sourced in JDK 11  
 -Event based tracing framework  
 -Built into Java Runtime (JVM), piggybacks on the information captured by the JVM. 
@@ -23,7 +25,7 @@ Thread ID:  ID of the thread generating the event; not all events are tied to a 
 StackTrace ID:  StackTraces are stored separately, stacktrace IDs are stored with the event  
 Event specific payload:  Specific data points for the event, as defined in the event declaration. Refer src/main/java/com/sxnamit/jfr/event/TransactionCommitEvent.java  
   
-### Custom event declaration  
+## Custom event declaration  
 ```
 import jdk.jfr.Event;
 
@@ -46,8 +48,8 @@ void placeOrder() {
 ```
 
 ## JFR annotations  
-Annotations specified below help with the presentation of recorded data e.g., in tools like JMC. Take a look at the class TransactionCommitEvent.java  
-to see how to use the JFR annotations and open and view the recording TransactionCommitDeo.jfr in JMC to see how the event data is presented in Event Browser.  
+The annotations specified below help with the presentation of recorded data, for example, in tools like JMC. Take a look at the class TransactionCommitEvent.java to see how to use the JFR annotations, and open and view the recording TransactionCommitDemo.jfr in JMC to see how the event data is presented in the Event Browser.  
+  
 @Name  
 https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Name.html  
   
@@ -61,6 +63,7 @@ https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Description.h
 https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Category.html  
   
 Annotations that modify the recording behavior...  
+  
 @Threshold  
 https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Threshold.html  
   
@@ -77,8 +80,8 @@ Events can be filtered in/out of a recording by
   
   
 ## Effects on performance  
--Default configuration ({JAVA_HOME}/lib/jfr/default.jfc) claimed to have less than 1% overhead; other configurations can have more overhead.
--Stack depth chosen effects performance. Default is 64, however deep call stacks can impact performance.
+-Default configuration ({JAVA_HOME}/lib/jfr/default.jfc) claimed to have less than 1% overhead; other configurations can have more overhead.  
+-Stack depth chosen effects performance. Default is 64, however deep call stacks can impact performance.  
 -Takes advantage of JIT compilation inlining to optimize the code; check out this explanation [here](https://youtu.be/xrdLLx6YoDM?feature=shared&t=1457)  
 -Comparison with other logging tools is [here](https://youtu.be/xrdLLx6YoDM?feature=shared&t=1697)  
 
