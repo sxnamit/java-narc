@@ -1,6 +1,19 @@
 # A how-to on Java Flight Recorder  
   
-## Anatomy of a JFR Event  
+##Overview
+Java Flight Recorder (JFR) is a continuous monitoring tool built into the Java runtime (JVM), that collects diagnostic and profiling data from a running Java application.  
+
+-Open sourced in JDK 11  
+-Event based tracing framework  
+-Built into Java Runtime (JVM), piggybacks on the information captured by the JVM. 
+ Collects event data from multiple levels, ranging from the OS to the JVM, JDK libraries, and the application. Enables in-depth analysis; start on high level, go deep as needed.
+-Extremely low overhead, suitable for production environments. Less than 1% overhead with the default setting.  
+-Provides APIs to  
+    1. Produce application level events  
+    2. Consuming event streams  
+-Event correlation 
+  
+## Anatomy of a JFR event  
 A JFR event is a small data blob containing:  
   
 Event ID:  Unique identifier  
@@ -18,7 +31,8 @@ import jdk.jfr.Event;
 class OrderEvent extends Event {
   public int orderId;
 }
-
+```
+```
 void placeOrder() {
   OrderEvent e = new OrderEvent();
   e.begin(); // captures the event start timestamp
@@ -30,6 +44,45 @@ void placeOrder() {
   e.commit(); // calls end() implicitly, so end() call is optional
 }
 ```
+
+## JFR annotations  
+Annotations specified below help with the presentation of recorded data e.g., in tools like JMC. Take a look at the class TransactionCommitEvent.java  
+to see how to use the JFR annotations and open and view the recording TransactionCommitDeo.jfr in JMC to see how the event data is presented in Event Browser.  
+@Name  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Name.html  
+  
+@Label  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Label.html  
+  
+@Description  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Description.html  
+  
+@Category  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Category.html  
+  
+Annotations that modify the recording behavior...  
+@Threshold  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Threshold.html  
+  
+@StackTrace  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/StackTrace.html  
+  
+@Enabled  
+https://docs.oracle.com/en/java/javase/21/docs/api/jdk.jfr/jdk/jfr/Enabled.html  
+  
+## Event filtering  
+Events can be filtered in/out of a recording by  
+- Duration. For app level events, use the annotation @Threshold. For JFR configured OOTB events, modify the configuration file (.jfc) using JMC or "jfr configure" command.  
+- Name. Modify the configuration file (.jfc) using JMC or "jfr configure" command to enable/disable an event by name, use setting name "enabled".  
+  
+  
+## Effects on performance  
+-Default configuration ({JAVA_HOME}/lib/jfr/default.jfc) claimed to have less than 1% overhead; other configurations can have more overhead.
+-Stack depth chosen effects performance. Default is 64, however deep call stacks can impact performance.
+-Takes advantage of JIT compilation inlining to optimize the code; check out this explanation [here](https://youtu.be/xrdLLx6YoDM?feature=shared&t=1457)  
+-Comparison with other logging tools is [here](https://youtu.be/xrdLLx6YoDM?feature=shared&t=1697)  
+
+
   
 P.S:  
 Here is some other relevant useful info on the topic -  
@@ -54,3 +107,10 @@ https://developers.redhat.com/blog/2020/08/25/get-started-with-jdk-flight-record
   
 JFR Event Collection for JDK 21
 https://sap.github.io/SapMachine/jfrevents/21.html  
+
+JEP  
+https://openjdk.org/jeps/328  
+  
+hotspot-jfr-dev Mailing List  
+https://mail.openjdk.org/mailman/listinfo/hotspot-jfr-dev  
+  
